@@ -10,10 +10,12 @@ app.use(express.json({
 
 app.use(cors({
   origin: 'http://localhost:3000',
-  credentials: false, // IMPORTANT: this must be set to true to allow sending and receiving cookies
+  credentials: true, // IMPORTANT: this must be set to true to allow sending and receiving cookies
 }));
 
 app.get('/', (req, res) => res.send('API Running'));
+
+app.use('/api/v1/images', require('./routes/api/images'));
 
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'test') {

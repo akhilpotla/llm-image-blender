@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -43,9 +45,14 @@ const SecondLandingTile = () => {
       setError('Please upload both images');
       return;
     }
-    // Handle form submission logic here
-    console.log('Image 1:', image1);
-    console.log('Image 2:', image2);
+    axios.post('/api/v1/images', {
+      image1,
+      image2,
+    }).then((res) => {
+      console.log(res.data);
+    }).catch((err) => {
+      console.error(err);
+    });
   };
 
   return (
