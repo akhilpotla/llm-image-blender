@@ -45,10 +45,18 @@ const SecondLandingTile = () => {
       setError('Please upload both images');
       return;
     }
-    axios.post('/api/v1/images', {
-      image1,
-      image2,
-    }).then((res) => {
+    let formData = new FormData();
+    formData.append('image1', image1);
+    // formData.append('image2', image2);
+    axios.post(
+      '/api/v1/images',
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    ).then((res) => {
       console.log(res.data);
     }).catch((err) => {
       console.error(err);
@@ -68,9 +76,9 @@ const SecondLandingTile = () => {
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
-              <Form.Group controlId="formImage1">
+              <Form.Group controlId="file">
                 <Form.Label>Image 1 (PNG)</Form.Label>
-                <Form.Control type="file" accept="image/png" onChange={handleImage1Change} />
+                <Form.Control name="file" type="file" accept="image/png" onChange={handleImage1Change} />
               </Form.Group>
             </Col>
             <Col>
