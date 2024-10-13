@@ -13,6 +13,12 @@ services:
       - mydb:/var/lib/mysql
     restart: always
 
+  av:
+    image: clamav/clamav:latest
+    ports:
+      - "3310:3310"
+    restart: always
+
 volumes:
   mydb:
     name: "mysql-volume"
