@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const NodeClam = require("clamscan");
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 
 // Set up multer for file uploads
 const upload = multer({ dest: "uploads/" });
@@ -72,6 +74,32 @@ router.post("/", upload.array("images", 2), (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+});
+
+// @route    GET api/v1/images/list
+// @desc     List uploaded images
+// @access   Public
+router.get("/list", (req, res) => {
+  fs.readdir("uploads", (err, files) => {
+    if (err) {
+      return res.status(500).send("Unable to scan directory");
+    }
+    res.json(files);
+  });
+});
+
+// @route    GET api/v1/images/:filename
+// @desc     Serve uploaded image
+// @access   Public
+router.get("/:filename", (req, res) => {
+  const filePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "uploads",
+    req.params.filename
+  );
+  res.sendFile(filePath);
 });
 
 module.exports = router;
