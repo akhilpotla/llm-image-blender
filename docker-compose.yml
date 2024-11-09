@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   db:
     image: mysql:latest
@@ -15,8 +14,11 @@ services:
 
   av:
     image: clamav/clamav:latest
+    platform: linux/amd64
     ports:
       - "3310:3310"
+    volumes:
+      - /Users/username/repos/llm-breeder/uploads:/app/uploads
     restart: always
 
 volumes:
