@@ -3,6 +3,9 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 import clamd
+import time
+
+from utils.juxtapose_images import juxtapose_images
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
@@ -23,7 +26,6 @@ def scan_file(file_path):
     try:
         clam_file_path = '/app/{}'.format(file_path)
         result = clamav.scan(clam_file_path)
-        print(f"Scan result: {result}")
         if result[clam_file_path] == ('OK', None):
             return {'infected': False}
         else:
@@ -46,6 +48,15 @@ def upload_images():
     if len(files) != 2:
         return jsonify({'error': 'Please provide 2 images'}), 400
 
+    saved_files = scan_all_files(files)
+    if 'error' in saved_files:
+        return jsonify(saved_files), 400
+    else:
+        juxtapose_image_path = get_juxtaposed_image_path(saved_files)
+
+    return jsonify({'message': 'Images uploaded successfully', 'files': saved_files}), 201
+
+def scan_all_files(files):
     saved_files = []
     for file in files:
         if file and file.filename.endswith('png'):
@@ -55,15 +66,24 @@ def upload_images():
 
             # Scan the file for viruses
             scan_result = scan_file(file_path)
-            print(f"Scan result: {scan_result}")
             if scan_result['infected']:
-                return jsonify({'error': 'Virus detected in file'}), 400
+                return {'error': 'Virus detected in file'}
 
             saved_files.append(file_path)
         else:
-            return jsonify({'error': 'Please provide PNG images only'}), 400
+            return {'error': 'Please provide PNG images only'}
+    return saved_files
 
-    return jsonify({'message': 'Images uploaded successfully', 'files': saved_files}), 201
+def get_juxtaposed_image_path(saved_files):
+    image1_path = saved_files[0]
+    image2_path = saved_files[1]
+    timestamp = int(time.time())
+
+    juxtaposed_image = juxtapose_images(image1_path, image2_path)
+    juxtaposed_image_path = os.path.join(app.config['UPLOAD_FOLDER'], '{}.png'.format(timestamp))
+    juxtaposed_image.save(juxtaposed_image_path)
+    return juxtaposed_image_path
+
 
 if __name__ == '__main__':
     app.run(debug=True)
