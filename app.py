@@ -1,14 +1,24 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
 import os
-import clamd
+
 import time
 
-from utils.juxtapose_images import juxtapose_images
+import base64
+import clamd
+import requests
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
+from werkzeug.utils import secure_filename
+
+from utils.image_prompt_generation import image_generation
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": "http://localhost:3000"}},  # Restrict origin
+    supports_credentials=True  # Allow credentials
+)
+
 
 # Ensure the upload folder exists
 UPLOAD_FOLDER = 'uploads'
@@ -35,12 +45,13 @@ def scan_file(file_path):
         print(f"Error scanning file: {e}")
         raise e
 
-@app.route('/')
+@app.route('/api', methods=['GET', 'OPTIONS'])
 def home():
     return "Hello, Flask!"
 
 @app.route('/api/v1/images', methods=['POST'])
 def upload_images():
+    print("Request received")
     if 'images' not in request.files:
         return jsonify({'error': 'No images in the request'}), 400
 
@@ -49,17 +60,31 @@ def upload_images():
         return jsonify({'error': 'Please provide 2 images'}), 400
 
     saved_files = scan_all_files(files)
+    print("Images Scanned")
+
     if 'error' in saved_files:
         return jsonify(saved_files), 400
     else:
-        juxtapose_image_path = get_juxtaposed_image_path(saved_files)
+        new_image_url = image_generation(saved_files[0], saved_files[1])
+        print(new_image_url)
 
-    return jsonify({'message': 'Images uploaded successfully', 'files': saved_files}), 201
+    print("New Image Generated")
+    print(new_image_url)
+
+    new_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'new_image.png')
+    new_image = requests.get(new_image_url)
+    with open(new_image_path, 'wb') as file:
+        file.write(new_image.content)
+
+    with open(new_image_path, 'rb') as file:
+        new_image_base64 = base64.b64encode(file.read()).decode('utf-8')
+
+    return jsonify({'message': 'New image created', 'image': new_image_base64}), 200
 
 def scan_all_files(files):
     saved_files = []
     for file in files:
-        if file and file.filename.endswith('png'):
+        if file and (file.filename.endswith('png') or file.filename.endswith('jpg')):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
