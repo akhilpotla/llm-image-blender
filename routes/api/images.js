@@ -5,8 +5,24 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
+const {
+  downloadImage,
+  imageGeneration,
+} = require("../../utils/imageGeneration");
+
 // Set up multer for file uploads
-const upload = multer({ dest: "uploads/" });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const baseName = path.basename(file.originalname, ext);
+    cb(null, `${baseName}-${Date.now()}${ext}`);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const clamscan = new NodeClam().init({
   removeInfected: true, // Automatically remove infected files
@@ -21,19 +37,22 @@ const clamscan = new NodeClam().init({
   },
 });
 
-// Function to scan uploaded files
-const scanFile = async (filePath) => {
+const scanAllFiles = async (filePaths) => {
   try {
     const clamav = await clamscan;
-    const { isInfected, viruses } = await clamav.scanFile(filePath);
+    const results = await clamav.scanFiles(filePaths);
 
-    if (isInfected) {
-      console.log(`File is infected with: ${viruses}`);
-      fs.unlinkSync(filePath); // Remove infected file
-      return { infected: true, viruses };
+    if (results.badFiles.length > 0) {
+      results.badFiles.forEach((badFile) => {
+        if (badFile.isInfected) {
+          console.log(`File is infected: ${badFile.file}`);
+          fs.unlinkSync(badFile.file); // Remove infected file
+        }
+      });
+      return false;
     }
 
-    return { infected: false };
+    return results.goodFiles;
   } catch (error) {
     console.error("Error during ClamAV scan:", error);
     throw error;
@@ -48,28 +67,24 @@ router.get("/", (req, res) => res.send("Images route"));
 // @route    POST api/v1/images
 // @desc     Upload 2 images
 // @access   Public
-router.post("/", upload.array("images", 2), (req, res) => {
+router.post("/", upload.array("images", 2), async (req, res) => {
   try {
     if (!req.files || req.files.length !== 2) {
       return res.status(400).json({ msg: "Please upload exactly 2 images" });
     }
     const file1 = req.files[0];
     const file2 = req.files[1];
-    const { infectedFile1, virusesFile1 } = scanFile(file1.path);
-    const { infectedFile2, virusesFile2 } = scanFile(file2.path);
-    console.log("Infected file 1: ", infectedFile1);
-    console.log("Viruses file 1: ", virusesFile1);
-    console.log("Infected file 2: ", infectedFile2);
-    console.log("Viruses file 2: ", virusesFile2);
+    const filePaths = [file1.path, file2.path];
+    const savedFiles = await scanAllFiles(filePaths);
+    if (!savedFiles) {
+      return res.status(400).json({ msg: "One or more files are infected" });
+    }
 
-    // Log file details to verify they are received
-    req.files.forEach((file) => {
-      console.log(
-        `Received file: ${file.originalname}, size: ${file.size} bytes`
-      );
-    });
+    const url = await imageGeneration(savedFiles);
+    const imagePath = await downloadImage(url, req.id);
+    const base64Image = fs.readFileSync(imagePath, { encoding: "base64" });
 
-    res.json({ msg: "Images uploaded successfully", files: req.files });
+    res.json({ msg: "Image generated successfully", image: base64Image });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
