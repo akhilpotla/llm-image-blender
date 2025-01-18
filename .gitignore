@@ -113,4 +113,5 @@ config/db.js
 # Misc
 devconnector_html_theme/
 uploads/
+downloads/
 __pycache__
