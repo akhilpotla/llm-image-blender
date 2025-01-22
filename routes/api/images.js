@@ -4,6 +4,14 @@ const NodeClam = require("clamscan");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
+const { PinataSDK } = require("pinata-web3");
+
+const config = require("config");
+
+const pinata = new PinataSDK({
+  pinataJwt: config.PINATA_JWT,
+  pinataGateway: config.PINATA_GATEWAY,
+});
 
 const {
   downloadImage,
@@ -83,8 +91,9 @@ router.post("/", upload.array("images", 2), async (req, res) => {
     const url = await imageGeneration(savedFiles);
     const imagePath = await downloadImage(url, req.id);
     const base64Image = fs.readFileSync(imagePath, { encoding: "base64" });
+    const upload = await pinata.upload.base64(base64Image);
 
-    res.json({ msg: "Image generated successfully", image: base64Image });
+    res.json({ msg: "Image generated successfully", upload });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
