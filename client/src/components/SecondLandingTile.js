@@ -57,9 +57,9 @@ const SecondLandingTile = () => {
         },
       })
       .then((res) => {
-        const base64Image = res.data.image;
-        console.log(base64Image);
-        downloadBase64AsImage(base64Image, "test.png");
+        const data = res.data;
+        // Display alert with the image CID
+        alert(`Image CID: ${data.IpfsHash}`);
       })
       .catch((err) => {
         console.error(err);
@@ -75,6 +75,17 @@ const SecondLandingTile = () => {
         const base64Image = res.data.image;
         console.log(base64Image);
         downloadBase64AsImage(base64Image, "test.png");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const testPinning = () => {
+    axios
+      .get("/api/v1/images/pin")
+      .then((res) => {
+        console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
