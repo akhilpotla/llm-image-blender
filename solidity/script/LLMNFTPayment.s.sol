@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.28;
 
 import {Script, console} from "forge-std/Script.sol";
-import {Counter} from "../src/Counter.sol";
+import {LLMNFTPayment} from "../src/LLMNFTPayment.sol";
 
-contract CounterScript is Script {
-    Counter public counter;
+contract LLMNFTPaymentScript is Script {
+    LLMNFTPayment public llmNFTPayment;
 
     function setUp() public {}
 
     function run() public {
         vm.startBroadcast();
 
-        counter = new Counter();
+        llmNFTPayment = new LLMNFTPayment();
 
         vm.stopBroadcast();
     }
