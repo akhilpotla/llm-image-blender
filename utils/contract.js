@@ -1,10 +1,11 @@
 import { ethers } from "ethers";
-import PaymentContractABI from "./PaymentContractABI.json";
-import NFTContractABI from "./NFTContractABI.json";
+import PaymentContractABI from "../config/LLMNFTPaymentABI.json";
+import NFTContractABI from "../config/LLMGenerateNFTABI.json";
+const config = require("config");
 
-const provider = new ethers.providers.JsonRpcProvider("YOUR_RPC_URL");
-const paymentContractAddress = "0xPAYMENT_CONTRACT";
-const nftContractAddress = "0xNFT_CONTRACT";
+const provider = new ethers.providers.JsonRpcProvider(config.SEPOLIA_RPC_URL);
+const paymentContractAddress = config.PAYMENT_CONTRACT_ADDRESS;
+const nftContractAddress = config.NFT_CONTRACT_ADDRESS;
 
 const paymentContract = new ethers.Contract(
   paymentContractAddress,
@@ -19,7 +20,7 @@ const nftContract = new ethers.Contract(
 );
 
 // We need a wallet/signer with ability to mint from the NFT contract:
-const signer = new ethers.Wallet("PRIVATE_KEY", provider);
+const signer = new ethers.Wallet(config.PRIVATE_KEY, provider);
 const nftContractWithSigner = nftContract.connect(signer);
 
 // Listen for PaymentReceived events
