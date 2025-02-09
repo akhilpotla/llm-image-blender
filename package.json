@@ -27,6 +27,7 @@
     "config": "^3.3.11",
     "connect-session-sequelize": "^7.1.7",
     "cors": "^2.8.5",
+    "ethers": "^6.13.5",
     "express": "^4.19.2",
     "express-mysql-session": "^3.0.2",
     "express-session": "^1.18.0",
