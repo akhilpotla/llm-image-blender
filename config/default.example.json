@@ -6,5 +6,7 @@
     "PINATA_API_KEY": "11111111111111",
     "PINATA_API_SECRET": "11111111111111",
     "PINATA_JWT": "11111111111111",
-    "PINATA_GATEWAY": "example-gateway.mypinata.cloud"
+    "PINATA_GATEWAY": "example-gateway.mypinata.cloud",
+    "PAYMENT_CONTRACT_ADDRESS": "0x",
+    "NFT_CONTRACT_ADDRESS": "0x"
 }
