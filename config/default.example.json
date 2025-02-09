@@ -8,5 +8,7 @@
     "PINATA_JWT": "11111111111111",
     "PINATA_GATEWAY": "example-gateway.mypinata.cloud",
     "PAYMENT_CONTRACT_ADDRESS": "0x",
-    "NFT_CONTRACT_ADDRESS": "0x"
+    "NFT_CONTRACT_ADDRESS": "0x",
+    "SEPOLIA_RPC_URL": "https://sepolia.infura.io/v3/apikey",
+    "PRIVATE_KEY": "privatekey"
 }
