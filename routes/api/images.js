@@ -100,30 +100,4 @@ router.post("/", upload.array("images", 2), async (req, res) => {
   }
 });
 
-// @route    GET api/v1/images/list
-// @desc     List uploaded images
-// @access   Public
-router.get("/list", (req, res) => {
-  fs.readdir("uploads", (err, files) => {
-    if (err) {
-      return res.status(500).send("Unable to scan directory");
-    }
-    res.json(files);
-  });
-});
-
-// @route    GET api/v1/images/:filename
-// @desc     Serve uploaded image
-// @access   Public
-router.get("/:filename", (req, res) => {
-  const filePath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "uploads",
-    req.params.filename
-  );
-  res.sendFile(filePath);
-});
-
 module.exports = router;
