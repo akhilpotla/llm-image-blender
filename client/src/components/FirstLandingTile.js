@@ -1,29 +1,28 @@
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-
-import messages from '../imessages.png';
-
+import React from "react";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 
 const FirstLandingTile = () => {
   return (
-    <Container className="pt-5">
+    <Container className="pt-5 pb-5">
       <h1>
         <b>
-          Talk to your
+          Generate your own
           <span className="text-primary">
-            <br/>crypto wallet.
+            <br />
+            AI art NFTs.
           </span>
         </b>
       </h1>
-      <h3 className="text-muted">Trade, transfer, sell crypto right from iMessage</h3>
-      <Button className="mt-3 text-white"variant="primary">
-        Send Message
+      <h3 className="text-muted">
+        Create unique AI art NFTs with your own base images.
+      </h3>
+      <Button className="mt-3 text-white" variant="primary">
+        Generate NFT
       </Button>
-      <br/>
-      <img className="trim mt-3" src={messages} alt="imessages"/>
+      <br />
     </Container>
-  )
-}
+  );
+};
 
 export default FirstLandingTile;
