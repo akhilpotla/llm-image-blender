@@ -18,7 +18,7 @@ services:
     ports:
       - "3310:3310"
     volumes:
-      - /Users/username/repos/llm-breeder/uploads:/app/uploads
+      - /Users/username/repos/llm-image-blender/uploads:/app/uploads
     restart: always
 
 volumes:
