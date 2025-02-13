@@ -2,7 +2,7 @@
     "jwtSecret": "mySecret",
     "salt": 10,
     "maxAgeMilliseconds": 60000,
-    "API_KEY": "openai-api-key",
+    "OPENAI_API_KEY": "openai-api-key",
     "PINATA_API_KEY": "11111111111111",
     "PINATA_API_SECRET": "11111111111111",
     "PINATA_JWT": "11111111111111",
