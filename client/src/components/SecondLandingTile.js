@@ -113,7 +113,7 @@ const SecondLandingTile = () => {
             type="submit"
             disabled={account == null || awaitingResponse}
           >
-            {account == null ? `First Connect Wallet` : `Submit`}
+            {account == null ? `Wallet Connection Required` : `Submit`}
           </Button>
         </Form>
       </Container>
