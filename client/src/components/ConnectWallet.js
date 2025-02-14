@@ -27,7 +27,9 @@ const ConnectWallet = () => {
       {account ? (
         <p>Connected: {account}</p>
       ) : (
-        <Button onClick={connectWallet}>Connect MetaMask</Button>
+        <Button className="mt-3 text-white" onClick={connectWallet}>
+          Connect MetaMask
+        </Button>
       )}
     </div>
   );
