@@ -21,7 +21,7 @@ const SecondLandingTile = () => {
 
   const handleImage1Change = (e) => {
     const file = e.target.files[0];
-    if (file.size > MAX_SIZE) {
+    if (file && file.size > MAX_SIZE) {
       setError("File size exceeds 5MB");
       setImage1(null);
       return;
@@ -33,7 +33,7 @@ const SecondLandingTile = () => {
 
   const handleImage2Change = (e) => {
     const file = e.target.files[0];
-    if (file.size > MAX_SIZE) {
+    if (file && file.size > MAX_SIZE) {
       setError("File size exceeds 5MB");
       setImage2(null);
       return;
@@ -44,7 +44,6 @@ const SecondLandingTile = () => {
   };
 
   const handleSubmit = (e) => {
-    setAwaitingResponse(true);
     e.preventDefault();
     if (!image1 || !image2) {
       setError("Please upload both images");
@@ -53,6 +52,7 @@ const SecondLandingTile = () => {
     let formData = new FormData();
     formData.append("images", image1);
     formData.append("images", image2);
+    setAwaitingResponse(true);
     axios
       .post("/api/v1/images", formData, {
         headers: {
@@ -93,6 +93,7 @@ const SecondLandingTile = () => {
                   type="file"
                   accept="image/png, image/jpeg"
                   onChange={handleImage1Change}
+                  required
                 />
               </Form.Group>
             </Col>
@@ -103,6 +104,7 @@ const SecondLandingTile = () => {
                   type="file"
                   accept="image/png, image/jpeg"
                   onChange={handleImage2Change}
+                  required
                 />
               </Form.Group>
             </Col>
