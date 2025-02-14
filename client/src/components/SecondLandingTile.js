@@ -83,17 +83,6 @@ const SecondLandingTile = () => {
       });
   };
 
-  const testPinning = () => {
-    axios
-      .get("/api/v1/images/pin")
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
   const downloadBase64AsImage = (base64String, fileName) => {
     // Convert Base64 string to a binary Blob
     const byteCharacters = atob(base64String); // Decode the Base64 string
