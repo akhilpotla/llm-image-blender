@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import Button from "react-bootstrap/Button";
 
-const ConnectWallet = () => {
-  const [account, setAccount] = useState(null);
+const ConnectWallet = (props) => {
+  const [account, setAccount] = props.account;
 
   // Function to connect MetaMask
   const connectWallet = async () => {

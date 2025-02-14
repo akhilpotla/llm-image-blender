@@ -11,6 +11,7 @@ import Col from "react-bootstrap/Col";
 import ConnectWallet from "./ConnectWallet";
 
 const SecondLandingTile = () => {
+  const [account, setAccount] = useState(null);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [error, setError] = useState(null);
@@ -76,7 +77,7 @@ const SecondLandingTile = () => {
         <h3 className="pt-3 text-muted">
           Generate provably rare AI art with ease.
         </h3>
-        <ConnectWallet />
+        <ConnectWallet account={[account, setAccount]} />
         {error && (
           <Alert variant="danger" className="mt-3">
             {error}
@@ -110,9 +111,9 @@ const SecondLandingTile = () => {
             className="mt-3 text-white"
             variant="secondary"
             type="submit"
-            disabled={awaitingResponse}
+            disabled={account == null || awaitingResponse}
           >
-            Submit
+            {account == null ? `First Connect Wallet` : `Submit`}
           </Button>
         </Form>
       </Container>
