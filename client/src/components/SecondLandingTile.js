@@ -8,6 +8,8 @@ import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+import ConnectWallet from "./ConnectWallet";
+
 const SecondLandingTile = () => {
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
@@ -120,6 +122,7 @@ const SecondLandingTile = () => {
 
   return (
     <div className="gradient-background-top">
+      <ConnectWallet />
       <Container className="pt-8 pb-8">
         <h2>Upload images. Mint NFT AI art</h2>
         <h3 className="pt-3 text-muted">
