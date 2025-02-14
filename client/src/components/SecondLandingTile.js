@@ -71,12 +71,12 @@ const SecondLandingTile = () => {
 
   return (
     <div className="gradient-background-top">
-      <ConnectWallet />
-      <Container className="pt-8 pb-8">
+      <Container className="pt-5 pb-5">
         <h2>Upload images. Mint NFT AI art</h2>
         <h3 className="pt-3 text-muted">
           Generate provably rare AI art with ease.
         </h3>
+        <ConnectWallet />
         {error && (
           <Alert variant="danger" className="mt-3">
             {error}
