@@ -96,41 +96,43 @@ const SecondLandingTile = () => {
             {error}
           </Alert>
         )}
-        <Form onSubmit={handleSubmit}>
-          <Row>
-            <Col>
-              <Form.Group controlId="file">
-                <Form.Label>Image 1 (PNG or JPG)</Form.Label>
-                <Form.Control
-                  name="file"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={handleImage1Change}
-                  required
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group controlId="formImage2">
-                <Form.Label>Image 2 (PNG or JPG)</Form.Label>
-                <Form.Control
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={handleImage2Change}
-                  required
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Button
-            className="mt-3 text-white"
-            variant="secondary"
-            type="submit"
-            disabled={account == null || awaitingResponse}
-          >
-            {account == null ? `Wallet Connection Required` : `Submit`}
-          </Button>
-        </Form>
+        {account ? (
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col>
+                <Form.Group controlId="file">
+                  <Form.Label>Image 1 (PNG or JPG)</Form.Label>
+                  <Form.Control
+                    name="file"
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    onChange={handleImage1Change}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="formImage2">
+                  <Form.Label>Image 2 (PNG or JPG)</Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    onChange={handleImage2Change}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Button
+              className="mt-3 text-white"
+              variant="secondary"
+              type="submit"
+              disabled={account == null || awaitingResponse}
+            >
+              {account == null ? `Wallet Connection Required` : `Submit`}
+            </Button>
+          </Form>
+        ) : null}
       </Container>
     </div>
   );
