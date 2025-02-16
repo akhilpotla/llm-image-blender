@@ -28,6 +28,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => res.send("API Running"));
 
 app.use("/api/v1/images", require("./routes/api/images"));
+app.use("/api/v1/contracts", require("./routes/api/contracts"));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
