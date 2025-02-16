@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import Button from "react-bootstrap/Button";
@@ -16,8 +16,21 @@ const SecondLandingTile = () => {
   const [image2, setImage2] = useState(null);
   const [error, setError] = useState(null);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const [paymentContractAddress, setPaymentContractAddress] = useState(null);
 
   const MAX_SIZE = 5 * 1024 * 1024; // 10MB
+
+  useEffect(() => {
+    axios
+      .get("/api/v1/contracts/payment")
+      .then((res) => {
+        console.log(res.data);
+        setPaymentContractAddress(res.data.contractAddress);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   const handleImage1Change = (e) => {
     const file = e.target.files[0];
