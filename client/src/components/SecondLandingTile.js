@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { BrowserProvider, parseEther, Contract } from "ethers";
 import axios from "axios";
 
 import Button from "react-bootstrap/Button";
@@ -9,6 +10,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import ConnectWallet from "./ConnectWallet";
+import contractABI from "../config/LLMNFTPaymentABI.json";
 
 const SecondLandingTile = () => {
   const [account, setAccount] = useState(null);
@@ -16,16 +18,16 @@ const SecondLandingTile = () => {
   const [image2, setImage2] = useState(null);
   const [error, setError] = useState(null);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
-  const [paymentContractAddress, setPaymentContractAddress] = useState(null);
+  const [paymentContract, setPaymentContract] = useState(null);
+  const AMOUNT = "0.0051";
 
-  const MAX_SIZE = 5 * 1024 * 1024; // 10MB
+  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
   useEffect(() => {
     axios
       .get("/api/v1/contracts/payment")
       .then((res) => {
-        console.log(res.data);
-        setPaymentContractAddress(res.data.contractAddress);
+        setPaymentContract(res.data.contractAddress);
       })
       .catch((err) => {
         console.error(err);
@@ -53,6 +55,33 @@ const SecondLandingTile = () => {
     } else {
       setError(null);
       setImage2(file);
+    }
+  };
+
+  const sendPayment = async (e) => {
+    e.preventDefault();
+    if (!window.ethereum) {
+      alert("MetaMask is not installed");
+      return;
+    }
+    if (!paymentContract) {
+      alert("Payment contract address is missing!");
+      return;
+    }
+    try {
+      // Connect to Ethereum provider
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new Contract(paymentContract, contractABI.abi, signer);
+      // Send ETH to the payment contract
+      const tx = await contract.purchaseNFT({
+        value: parseEther(AMOUNT), // Convert ETH to Wei
+      });
+      console.log("Transaction sent! Hash:", tx.hash);
+      alert(`Transaction sent! Hash: ${tx.hash}`);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+      alert("Transaction failed.");
     }
   };
 
@@ -97,7 +126,7 @@ const SecondLandingTile = () => {
           </Alert>
         )}
         {account ? (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={sendPayment}>
             <Row>
               <Col>
                 <Form.Group controlId="file">
