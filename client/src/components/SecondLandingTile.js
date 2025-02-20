@@ -19,6 +19,7 @@ const SecondLandingTile = () => {
   const [error, setError] = useState(null);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const [paymentContract, setPaymentContract] = useState(null);
+  const [waitingForTransaction, setWaitingForTransaction] = useState(false);
   const AMOUNT = "0.0051";
 
   const MAX_SIZE = 5 * 1024 * 1024; // 5MB
@@ -74,15 +75,19 @@ const SecondLandingTile = () => {
       const signer = await provider.getSigner();
       const contract = new Contract(paymentContract, contractABI.abi, signer);
       // Send ETH to the payment contract
+      setWaitingForTransaction(true);
       const tx = await contract.purchaseNFT({
         value: parseEther(AMOUNT), // Convert ETH to Wei
       });
+      const receipt = await tx.wait();
+      console.log("Transaction receipt:", receipt);
       console.log("Transaction sent! Hash:", tx.hash);
       alert(`Transaction sent! Hash: ${tx.hash}`);
     } catch (error) {
       console.error("Transaction failed:", error);
       alert("Transaction failed.");
     }
+    setWaitingForTransaction(false);
   };
 
   const handleSubmit = (e) => {
@@ -112,6 +117,17 @@ const SecondLandingTile = () => {
     setAwaitingResponse(false);
   };
 
+  const handleWaitingForTransaction = () => {
+    if (waitingForTransaction) {
+      return (
+        <Alert variant="danger" className="mt-3">
+          Waiting for transaction confirmation. Do not refresh or close the
+          page.
+        </Alert>
+      );
+    }
+  };
+
   return (
     <div className="gradient-background-top">
       <Container className="pt-5 pb-5">
@@ -125,6 +141,7 @@ const SecondLandingTile = () => {
             {error}
           </Alert>
         )}
+        {handleWaitingForTransaction()}
         {account ? (
           <Form onSubmit={sendPayment}>
             <Row>
