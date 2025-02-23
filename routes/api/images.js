@@ -67,18 +67,6 @@ const scanAllFiles = async (filePaths) => {
   }
 };
 
-// @route   GET api/v1/images/contract/payment
-// @desc    Get payment contract address
-// @access  Public
-router.get("/contract/payment", (req, res) => {
-  try {
-    res.json({ contractAddress: config.PAYMENT_CONTRACT_ADDRESS });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
-
 // @route    GET api/v1/images
 // @desc     Test route
 // @access   Public
