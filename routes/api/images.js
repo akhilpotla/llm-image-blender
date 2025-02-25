@@ -7,6 +7,7 @@ const path = require("path");
 const { PinataSDK } = require("pinata-web3");
 
 const config = require("config");
+const { mintNFT } = require("../../utils/contract");
 
 const pinata = new PinataSDK({
   pinataJwt: config.PINATA_JWT,
@@ -92,8 +93,18 @@ router.post("/", upload.array("images", 2), async (req, res) => {
     const imagePath = await downloadImage(url, req.id);
     const base64Image = fs.readFileSync(imagePath, { encoding: "base64" });
     const upload = await pinata.upload.base64(base64Image);
+    const IpfsHash = upload.IpfsHash;
+    const tokenJSON = JSON.stringify({
+      name: `AI Generated NFT ${new Date().toISOString()}`,
+      description: "AI generated art",
+      image: `ipfs://${IpfsHash}`,
+    });
+    await mintNFT(req.body.account, tokenJSON);
 
-    res.json({ msg: "Image generated successfully", upload });
+    res.json({
+      msg: "Image generated successfully",
+      upload,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

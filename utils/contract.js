@@ -15,9 +15,7 @@ async function mintNFT(payer, metadataUri) {
   const signer = new ethers.Wallet(config.PRIVATE_KEY, provider);
   const nftContractWithSigner = nftContract.connect(signer);
   const tx = await nftContractWithSigner.mintNFT(payer, metadataUri);
-  const receipt = await tx.wait();
-  console.log("NFT minted. Transaction hash:", receipt.transactionHash);
-  return receipt.transactionHash;
+  return tx.hash;
 }
 
 module.exports = { mintNFT };
