@@ -83,6 +83,8 @@ const SecondLandingTile = () => {
       console.log("Transaction receipt:", receipt);
       console.log("Transaction sent! Hash:", tx.hash);
       alert(`Transaction sent! Hash: ${tx.hash}`);
+      alert("Generating AI art... please wait.");
+      handleSubmit();
     } catch (error) {
       console.error("Transaction failed:", error);
       alert("Transaction failed.");
@@ -90,8 +92,7 @@ const SecondLandingTile = () => {
     setWaitingForTransaction(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!image1 || !image2) {
       setError("Please upload both images");
       return;
@@ -99,6 +100,7 @@ const SecondLandingTile = () => {
     let formData = new FormData();
     formData.append("images", image1);
     formData.append("images", image2);
+    formData.append("account", account);
     setAwaitingResponse(true);
     axios
       .post("/api/v1/images", formData, {
@@ -109,7 +111,8 @@ const SecondLandingTile = () => {
       .then((res) => {
         const data = res.data;
         // Display alert with the image CID
-        alert(`Image CID: ${data.IpfsHash}`);
+        console.log("Image CID:", data);
+        alert(`Image CID: ${data.upload.IpfsHash}`);
       })
       .catch((err) => {
         console.error(err);
