@@ -40,7 +40,7 @@ const clamscan = new NodeClam().init({
   scanLog: "./logs/clamscan.txt", // Log file to append scan results
   scanRecursively: false, // Scan folders recursively
   clamdscan: {
-    host: "localhost",
+    host: "av",
     port: 3310,
     timeout: 60000,
   },
