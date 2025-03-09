@@ -7,7 +7,7 @@ services:
       - "3000:3000"
       - "5000:5000"
     volumes:
-      - /Users/username/repos/llm-image-blender/uploads:/app/uploads
+      - ./uploads:/app/uploads
     depends_on:
       - av
     restart: always
@@ -17,7 +17,7 @@ services:
     ports:
       - "3310:3310"
     volumes:
-      - /Users/username/repos/llm-image-blender/uploads:/app/uploads
+      - ./uploads:/app/uploads
     restart: always
 
 volumes:
