@@ -1,17 +1,16 @@
 services:
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_DATABASE: "mydb"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "password"
-      MYSQL_ROOT_PASSWORD: "rootpassword"
+  app:
+    build: .
+    container_name: llm-image-blender
+    platform: linux/amd64
     ports:
-      - "3306:3306"
+      - "3000:3000"
+      - "5000:5000"
     volumes:
-      - mydb:/var/lib/mysql
+      - /Users/username/repos/llm-image-blender/uploads:/app/uploads
+    depends_on:
+      - av
     restart: always
-
   av:
     image: clamav/clamav:latest
     platform: linux/amd64
