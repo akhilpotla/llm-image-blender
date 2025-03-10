@@ -7,7 +7,6 @@ import ThirdLandingTile from "./components/ThirdLandingTile";
 import Navigation from "./components/Navigation";
 
 axios.defaults.baseURL = "http://localhost:5000";
-axios.defaults.withCredentials = true;
 
 function App() {
   return (
