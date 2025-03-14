@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { RotatingLines } from "react-loader-spinner";
 
 import ConnectWallet from "./ConnectWallet";
 import contractABI from "../config/LLMNFTPaymentABI.json";
@@ -113,19 +114,32 @@ const SecondLandingTile = () => {
         // Display alert with the image CID
         console.log("Image CID:", data);
         alert(`Image CID: ${data.upload.IpfsHash}`);
+        setAwaitingResponse(false);
       })
       .catch((err) => {
         console.error(err);
+        setAwaitingResponse(false);
       });
-    setAwaitingResponse(false);
   };
 
   const handleWaitingForTransaction = () => {
     if (waitingForTransaction) {
       return (
         <Alert variant="danger" className="mt-3">
+          <RotatingLines strokeColor="black" />
           Waiting for transaction confirmation. Do not refresh or close the
           page.
+        </Alert>
+      );
+    }
+  };
+
+  const handleAwaitingResponse = () => {
+    if (awaitingResponse) {
+      return (
+        <Alert variant="danger" className="mt-3">
+          <RotatingLines strokeColor="black" />
+          Generating your image...
         </Alert>
       );
     }
@@ -145,6 +159,7 @@ const SecondLandingTile = () => {
           </Alert>
         )}
         {handleWaitingForTransaction()}
+        {handleAwaitingResponse()}
         {account ? (
           <Form onSubmit={sendPayment}>
             <Row>
