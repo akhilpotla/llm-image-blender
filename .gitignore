@@ -115,3 +115,4 @@ devconnector_html_theme/
 uploads/
 downloads/
 __pycache__
+client/build/
